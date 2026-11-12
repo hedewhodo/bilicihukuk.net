@@ -480,7 +480,16 @@
                                 <div class="form-field">
                                     <label for="rNotes">Ön Değerlendirme Özeti ve Ek Notunuz</label>
                                     <textarea id="rNotes" class="input-glass" rows="4"></textarea>
+                                    <small style="display: block; margin-top: 6px; font-size: 11.5px; color: rgb(var(--fg) / 0.55);">* Lütfen özel nitelikli kişisel veri (sağlık, ceza mahkûmiyeti vb.) paylaşmayınız.</small>
                                 </div>
+
+                                <label class="kvkk-consent" style="margin-top: 10px; margin-bottom: 16px;">
+                                    <input type="checkbox" required>
+                                    <span>
+                                        <a href="#kvkk" onclick="openKvkkModal(); return false;">KVKK Aydınlatma Metni ve Yasal Uyarı</a>
+                                        <span> kapsamındaki bilgilendirmeyi okudum; bu formun kendiliğinden avukat-müvekkil ilişkisi kurmadığını kabul ediyorum.</span>
+                                    </span>
+                                </label>
 
                                 <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
                                     <button type="submit" class="btn-roll">
@@ -863,6 +872,40 @@
             );
             window.location.href = `mailto:info@bilicihukuk.net?subject=${subject}&body=${body}`;
         }
+
+        function openKvkkModal() {
+            document.getElementById('kvkkModal').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        function closeModalOnBg(e, modalId) {
+            if (e.target.id === modalId) closeModal(modalId);
+        }
     </script>
+
+    <!-- KVKK MODAL -->
+    <div class="modal-overlay" id="kvkkModal" role="dialog" aria-modal="true" aria-labelledby="kvkkModalTitle" onclick="closeModalOnBg(event, 'kvkkModal')">
+        <div class="modal-box">
+            <button type="button" class="modal-close" aria-label="Kapat" onclick="closeModal('kvkkModal')"><i class="fa-solid fa-xmark"></i></button>
+            <h3 id="kvkkModalTitle">KVKK Aydınlatma Metni ve Yasal Uyarı</h3>
+            <div class="bc-divider" style="margin: 8px 0 14px;">
+                <span class="bc-divider-core"></span>
+            </div>
+            <p>
+                6698 sayılı Kişisel Verilerin Korunması Kanunu ('KVKK') uyarınca, veri sorumlusu sıfatıyla Av. Hubeyb Bilici tarafından; iletişim ve değerlendirme formları üzerinden paylaştığınız ad-soyad, telefon, e-posta ve konu özeti verileriniz yalnızca randevu talebinizin incelenmesi ve tarafınıza geri dönüş sağlanması amacıyla sınırlı olarak işlenmektedir.
+            </p>
+            <p>
+                Kişisel verileriniz üçüncü kişilerle ticari amaçlarla kesinlikle paylaşılmaz. İletişim veya form alanlarında sağlık, ceza mahkûmiyeti veya güvenlik tedbirleri gibi özel nitelikli kişisel verilerin iletilmemesi rica olunur. WhatsApp uygulamasını kullanmayı tercih etmeniz halinde, anılan platformun çalışma prensibi gereği yurt dışına veri aktarımı söz konusu olabileceğinden açık rızanız bulunmuyorsa e-posta kanalını tercih ediniz.
+            </p>
+            <p>
+                1136 sayılı Avukatlık Kanunu ve TBB Reklam Yasağı Yönetmeliği uyarınca; bu sitedeki metinler ve ön değerlendirme araçları genel bilgilendirme amaçlı olup hukuki görüş veya mütalaa niteliğinde değildir; kendiliğinden avukat-müvekkil ilişkisi kurmaz. KVKK md. 11 kapsamındaki haklarınız için info@bilicihukuk.net üzerinden başvurabilirsiniz.
+            </p>
+        </div>
+    </div>
 </body>
 </html>
