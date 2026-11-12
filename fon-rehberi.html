@@ -11,6 +11,13 @@
     <link rel="canonical" href="https://bilicihukuk.net/fon-rehberi.html">
     <meta name="theme-color" content="#141810">
 
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://bilicihukuk.net/fon-rehberi.html">
+    <meta property="og:title" content="2026 Yatırım Fonu Tasfiyesi, 7596 Sayılı Kanun, PBLK ve YTM Ön Değerlendirme Rehberi | Av. Hubeyb Bilici">
+    <meta property="og:description" content="SPK tarafından tasfiyesine karar verilen yatırım fonları (TLY, THF, DOH, TP2, TMV, Pusula, Atlas, Hedef), 7596 sayılı Kanun, PBLK blokeli emirler ve Tera Yatırım YTM tazmin süreci için 5 soruda ön hukuki değerlendirme.">
+    <meta property="og:locale" content="tr_TR">
+
     <!-- JSON-LD Structured Data for Google Search & AI Overviews (GEO) -->
     <script type="application/ld+json">
     {
@@ -208,7 +215,7 @@
                             <span class="step-tracker__dot">05</span>
                             <span>Önceki Başvuru Durumu</span>
                         </li>
-                        <li class="step-tracker__item" data-step="6">
+                        <li class="step-tracker__item" data-step="6" onclick="renderResultRoadmap()">
                             <span class="step-tracker__dot">✓</span>
                             <span>Ön Değerlendirme & İletişim</span>
                         </li>
@@ -532,7 +539,7 @@
         <div class="container">
             <div class="section-top-meta">
                 <div class="section-index-pill">
-                    <span class="section-index-num">02</span>
+                    <span class="section-index-num">01</span>
                     <span class="mono-label" style="color: var(--ink-muted);">// SIKÇA SORULAN SORULAR (2026 FON TASFİYESİ & 7596 S. KANUN)</span>
                 </div>
                 <span class="mono-label" style="color: var(--ink-muted);">GENEL BİLGİLENDİRME</span>
@@ -540,11 +547,11 @@
 
             <div class="faq-list">
                 <div class="faq-row active">
-                    <button type="button" class="faq-trigger" onclick="toggleFaq(this)">
+                    <button type="button" class="faq-trigger" aria-expanded="true" onclick="toggleFaq(this)">
                         <span>7596 sayılı Kanun kapsamında yapılan ara ödemeleri almak dava açma hakkını ortadan kaldırır mı?</span>
                         <span class="faq-trigger__icon"><i class="fa-solid fa-chevron-down"></i></span>
                     </button>
-                    <div class="faq-body" style="max-height: 220px;">
+                    <div class="faq-body" style="max-height: 500px;">
                         <div class="faq-body__inner">
                             7596 sayılı Kanun kapsamında yapılan kısmi veya tasfiye ödemelerinin tahsili, bakiye anapara, değer kaybı veya reel zararlar için başvuru ve dava haklarını kendiliğinden ortadan kaldırmaz; ancak ödemenin kabulü sırasında fazlaya ilişkin dava ve talep haklarının usulüne uygun şekilde saklı tutulması önem taşır.
                         </div>
@@ -608,6 +615,16 @@
     <script>
         document.getElementById('currentYear').innerText = new Date().getFullYear();
 
+        const ambientGlow = document.getElementById('ambientGlow');
+        if (ambientGlow && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+            window.addEventListener('pointermove', (e) => {
+                const x = ((e.clientX / window.innerWidth) * 100).toFixed(1) + '%';
+                const y = ((e.clientY / window.innerHeight) * 100).toFixed(1) + '%';
+                ambientGlow.style.setProperty('--spot-x', x);
+                ambientGlow.style.setProperty('--spot-y', y);
+            }, { passive: true });
+        }
+
         const burgerBtn = document.getElementById('burgerBtn');
         function closeMobileMenu() {
             document.body.classList.remove('menu-open');
@@ -620,6 +637,9 @@
                 burgerBtn.setAttribute('aria-expanded', String(open));
             });
         }
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeMobileMenu();
+        });
 
         function toggleFaq(button) {
             const item = button.parentElement;
@@ -653,9 +673,18 @@
 
         function updateFundCode(val) {
             wizardState.fundCode = val.trim().toUpperCase();
+            document.querySelectorAll('.fund-code-badge').forEach(b => {
+                b.classList.toggle('active', b.textContent.trim().toUpperCase() === wizardState.fundCode);
+            });
             if (wizardState.fundCode.includes('TMV')) {
                 const tmvBtn = document.querySelector('#options-step-1 [data-code="TMV_KAPSAM_DISI"]');
                 if (tmvBtn) pickOption(1, 'TMV_KAPSAM_DISI', 'Sadece İşleme Kapatılan / 131 Tasfiye Listesinde Olmayan Fon (Örn: TMV)', tmvBtn, true);
+            } else if (wizardState.fundCode.includes('HEDEF')) {
+                const hedefBtn = document.querySelector('#options-step-1 [data-code="131_HEDEF_OLAGAN"]');
+                if (hedefBtn) pickOption(1, '131_HEDEF_OLAGAN', 'Hedef Portföy — Olağan Tasfiye Sürecindeki Fonlar', hedefBtn, true);
+            } else if (/^(TLY|THF|DOH|TP2|TLV|T3B|PUSULA|ATLAS)/.test(wizardState.fundCode)) {
+                const araBtn = document.querySelector('#options-step-1 [data-code="131_ARA_ODEME"]');
+                if (araBtn) pickOption(1, '131_ARA_ODEME', 'Tera, Pusula veya Atlas Portföy — 7596 s. Kanun Kapsamındaki Tasfiye Fonları', araBtn, true);
             }
         }
 
@@ -666,7 +695,14 @@
             wizardState.fundCode = fundName;
 
             const card = document.querySelector(`#options-step-1 [data-code="${categoryCode}"]`);
-            if (card) card.click();
+            if (card) {
+                const labelMap = {
+                    '131_ARA_ODEME': 'Tera, Pusula veya Atlas Portföy — 7596 s. Kanun Kapsamındaki Tasfiye Fonları',
+                    'TMV_KAPSAM_DISI': 'Sadece İşleme Kapatılan / 131 Tasfiye Listesinde Olmayan Fon (Örn: TMV)',
+                    '131_HEDEF_OLAGAN': 'Hedef Portföy — Olağan Tasfiye Sürecindeki Fonlar'
+                };
+                pickOption(1, categoryCode, labelMap[categoryCode] || wizardState.q1Label, card, true);
+            }
         }
 
         function pickOption(stepNum, code, label, btnEl, noAutoAdvance) {
@@ -679,7 +715,7 @@
             }
             btnEl.classList.add('is-selected');
 
-            if (!noAutoAdvance && stepNum >= 2 && stepNum <= 5) {
+            if (!noAutoAdvance && stepNum >= 1 && stepNum <= 5) {
                 setTimeout(() => changeStep(1), 200);
             }
         }

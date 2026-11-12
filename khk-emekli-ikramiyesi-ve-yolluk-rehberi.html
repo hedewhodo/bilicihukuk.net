@@ -268,7 +268,7 @@
                             <span class="step-tracker__dot">04</span>
                             <span>Önceki SGK / Kurum Başvurusu</span>
                         </li>
-                        <li class="step-tracker__item" data-step="5">
+                        <li class="step-tracker__item" data-step="5" onclick="renderKhkResult()">
                             <span class="step-tracker__dot">✓</span>
                             <span>Ön Değerlendirme & İletişim</span>
                         </li>
@@ -578,11 +578,11 @@
 
             <div class="faq-list">
                 <div class="faq-row active">
-                    <button type="button" class="faq-trigger" onclick="toggleFaq(this)">
+                    <button type="button" class="faq-trigger" aria-expanded="true" onclick="toggleFaq(this)">
                         <span>KHK ile ihraç edilen kamu görevlileri emekli olduğunda emekli ikramiyesi alabilir mi?</span>
                         <span class="faq-trigger__icon"><i class="fa-solid fa-chevron-down"></i></span>
                     </button>
-                    <div class="faq-body" style="max-height: 240px;">
+                    <div class="faq-body" style="max-height: 500px;">
                         <div class="faq-body__inner">
                             Evet. 5434 sayılı T.C. Emekli Sandığı Kanunu md. 89, 5510 sayılı Kanun, Anayasa Mahkemesi kararları ve Danıştay içtihatları uyarınca; kamu görevinden KHK ile çıkarılmış olmak, fiilen çalışılarak kazanılmış bulunan emekli ikramiyesi hakkını ortadan kaldırmaz. Emeklilik tahsisi yapılan kişilerin ödenmeyen emekli ikramiyeleri, SGK'ya yapılacak başvurunun reddi üzerine İdare Mahkemesinde açılacak davayla yasal faiziyle birlikte tahsil edilir.
                         </div>
@@ -646,6 +646,16 @@
     <script>
         document.getElementById('currentYear').innerText = new Date().getFullYear();
 
+        const ambientGlow = document.getElementById('ambientGlow');
+        if (ambientGlow && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+            window.addEventListener('pointermove', (e) => {
+                const x = ((e.clientX / window.innerWidth) * 100).toFixed(1) + '%';
+                const y = ((e.clientY / window.innerHeight) * 100).toFixed(1) + '%';
+                ambientGlow.style.setProperty('--spot-x', x);
+                ambientGlow.style.setProperty('--spot-y', y);
+            }, { passive: true });
+        }
+
         const burgerBtn = document.getElementById('burgerBtn');
         function closeMobileMenu() {
             document.body.classList.remove('menu-open');
@@ -658,6 +668,9 @@
                 burgerBtn.setAttribute('aria-expanded', String(open));
             });
         }
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeMobileMenu();
+        });
 
         function toggleFaq(button) {
             const item = button.parentElement;
